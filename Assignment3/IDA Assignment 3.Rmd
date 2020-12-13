@@ -25,12 +25,22 @@ library(ggplot2)
 library(tidyr)
 library(dplyr)
 library(maxLik)
+library(mice)
 ```
 
 ## Question 1
 
 ### $(a)$ My solution
-
+```{r}
+nhanes %>%
+  mutate(
+    Count = is.na(age+bmi+hyp+chl)
+  )%>%
+  summarise(
+    a = sum(Count)/n()
+  )
+```
+The percentage of incomplete cases is 48%.
 
 ### $(b)$ My solution
 
