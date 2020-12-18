@@ -32,21 +32,31 @@ library(mice)
 
 ### $(a)$ My solution
 ```{r}
-nhanes %>%
-  mutate(
-    Count = is.na(age+bmi+hyp+chl)
-  )%>%
-  summarise(
-    a = sum(Count)/n()
-  )
+print(c("The propotion of incomplete cases is",
+        1-nrow(cc(nhanes))/nrow(nhanes)),quote=FALSE)
 ```
 The percentage of incomplete cases is 48%.
 
 ### $(b)$ My solution
-
+```{r}
+#nhanes
+imps <- mice(nhanes,method="norm",printFlag=FALSE,seed=1)
+fits <- with(imps,lm(bmi~age+hyp+chl))
+ests <- pool(fits)
+ests
+summary(ests,conf.int=TRUE)[,c(2,3,7,8)]
+```
+From the pooled estimates, the proportions of variance due to missing data for intercept is 0.2233797, for the coefficient of "age" is 0.5997594, for the coefficient of "hyp" is 0.4857348, for the coefficient of "chl" is 0.4220811
 
 ### $(c)$ My solution
-
+```{r}
+ests_2 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=2),lm(bmi~age+hyp+chl)))
+ests_3 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=3),lm(bmi~age+hyp+chl)))
+ests_4 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=4),lm(bmi~age+hyp+chl)))
+ests_5 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=5),lm(bmi~age+hyp+chl)))
+ests_6 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=6),lm(bmi~age+hyp+chl)))
+summary(ests_3)
+```
 
 ### $(d)$ My solution
 
