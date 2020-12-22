@@ -43,10 +43,10 @@ The percentage of incomplete cases is 48%.
 imps <- mice(nhanes,method="norm",printFlag=FALSE,seed=1)
 fits <- with(imps,lm(bmi~age+hyp+chl))
 ests <- pool(fits)
-ests
-summary(ests,conf.int=TRUE)[,c(2,3,7,8)]
+print(ests[,3][,c(3,4,5,9,10)])
+#summary(ests,conf.int=TRUE)[,c(2,3,6,7,8)]
 ```
-From the pooled estimates, the proportions of variance due to missing data for intercept is 0.2233797, for the coefficient of "age" is 0.5997594, for the coefficient of "hyp" is 0.4857348, for the coefficient of "chl" is 0.4220811
+From the pooled estimates, the proportions of variance due to missing data($\frac{B+\frac{B}{M}}{V^\top}$) for intercept is 0.2233797, for the coefficient of "age" is 0.5997594, for the coefficient of "hyp" is 0.4857348, for the coefficient of "chl" is 0.4220811. Looking at the riv, *relative increase in variance*($\frac{B+\frac{B}{M}}{\bar{U}}$). "riv" of the coefficient of "age" is the largest. Therefore, the parameter for "age" appear to be most affected by the nonresponse.
 
 ### $(c)$ My solution
 ```{r}
@@ -55,14 +55,35 @@ ests_3 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=3),lm(bmi~age
 ests_4 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=4),lm(bmi~age+hyp+chl)))
 ests_5 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=5),lm(bmi~age+hyp+chl)))
 ests_6 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=6),lm(bmi~age+hyp+chl)))
-summary(ests_3)
+ests_2[,3][,c(3,4,5,10)]
+ests_3[,3][,c(3,4,5,10)]
+ests_4[,3][,c(3,4,5,10)]
+ests_5[,3][,c(3,4,5,10)]
+ests_6[,3][,c(3,4,5,10)]
 ```
 
 ### $(d)$ My solution
-
+```{r}
+ests_m1 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=1,m=100),lm(bmi~age+hyp+chl)))
+ests_m2 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=2,m=100),lm(bmi~age+hyp+chl)))
+ests_m3 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=3,m=100),lm(bmi~age+hyp+chl)))
+ests_m4 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=4,m=100),lm(bmi~age+hyp+chl)))
+ests_m5 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=5,m=100),lm(bmi~age+hyp+chl)))
+ests_m6 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=6,m=100),lm(bmi~age+hyp+chl)))
+ests_m1[,3][,c(3,4,5,10)]
+ests_m2[,3][,c(3,4,5,10)]
+ests_m3[,3][,c(3,4,5,10)]
+ests_m4[,3][,c(3,4,5,10)]
+ests_m5[,3][,c(3,4,5,10)]
+ests_m6[,3][,c(3,4,5,10)]
+```
 
 ## Question 2
-
+```{r}
+load("dataex2.Rdata")
+dataex2[,,100]
+mice(dataex2[,,1],method="norm",printFlag=FALSE)
+```
 
 ## Question 3
 
