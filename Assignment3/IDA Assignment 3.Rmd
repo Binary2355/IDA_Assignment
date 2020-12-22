@@ -55,11 +55,11 @@ ests_3 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=3),lm(bmi~age
 ests_4 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=4),lm(bmi~age+hyp+chl)))
 ests_5 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=5),lm(bmi~age+hyp+chl)))
 ests_6 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=6),lm(bmi~age+hyp+chl)))
-ests_2[,3][,c(3,4,5,10)]
-ests_3[,3][,c(3,4,5,10)]
-ests_4[,3][,c(3,4,5,10)]
-ests_5[,3][,c(3,4,5,10)]
-ests_6[,3][,c(3,4,5,10)]
+ests_2[,3][,c(3,4,5,9,10)]
+ests_3[,3][,c(3,4,5,9,10)]
+ests_4[,3][,c(3,4,5,9,10)]
+ests_5[,3][,c(3,4,5,9,10)]
+ests_6[,3][,c(3,4,5,9,10)]
 ```
 
 ### $(d)$ My solution
@@ -81,8 +81,46 @@ ests_m6[,3][,c(3,4,5,10)]
 ## Question 2
 ```{r}
 load("dataex2.Rdata")
-dataex2[,,100]
-mice(dataex2[,,1],method="norm",printFlag=FALSE)
+
+# built a function to return a matrix with a row 95% confidence intervals for beta_1
+# input:  ## D, 2-D, from dataex2
+          ## Mtd, a string used in mice() function
+# output: ## a matrix
+CI_beta1 <- function(D,Mtd){
+  imps <- mice(data=D,method=Mtd,printFlag=FALSE,seed=1,m=20)
+  ests <- pool(with(imps,lm(Y~X)))
+  return(matrix(summary(ests,conf.int=TRUE)[,c(7,8)][2,],nrow=1))
+}
+
+# built a function to return a matrix with rows 95% confidence intervals for beta_1
+# input:  ## data, 3-D,initialized as dataex2
+          ## Mtd, a string used in mice() function
+# output: ## a matrix
+CIs <- function(data=dataex2,Mtd){
+  Conf <- matrix(nrow=1,ncol=2)
+  for (i in 1:100){
+    A <- CI_beta1(data[,,i],Mtd=Mtd)
+    Conf <- rbind(Conf,A)
+  }
+  return(Conf[2:101,])
+}
+
+# function to return a emprical coverage probability
+  ## with 95% confidence intervals for beta_1
+# input:  ## data, 3-D,initialized as dataex2
+          ## Mtd, a string used in mice() function
+# output: ## emprical coverage probability(numeric)
+ECP <- function(data=dataex2,Mtd){
+  n = 100; times = 0
+  B = CIs(Mtd=Mtd)
+  for (i in 1:100){
+    times = ifelse(B[i,][1]<3 & B[i,][2]>3,times+1,times)
+  }
+  return(times/n)
+}
+
+print(c("The emprical probability for ß1 using stochastic regression imputation is",ECP(Mtd="norm.nob")),quote=FALSE)
+print(c("The emprical probability for ß1 using the corresponding bootstrap based version is",ECP(Mtd="norm.boot")),quote=FALSE)
 ```
 
 ## Question 3
