@@ -140,13 +140,19 @@ Assume the missing variables based on $X_i=(1,X_{i1},\dots,X_{in}), i=1,\dots,N$
 
 Assume a linear regression model with M imputations denoted as:
 $$
-\hat{y}^{(m)}_{mis}=X_{mis}\theta+z,\quad z\sim N(0,\hat{\sigma}^2),\,m=1,2,\dots,M
+\hat{y}^{(m)}_{mis}=X_{mis}\theta^{(m)}+z,\quad z\sim N(0,\hat{\sigma}^2),\,m=1,2,\dots,M
 $$
 Then:
 
-For case (i), first compute $\hat{\theta}^{(m)}$ for $m=1,2,\dots,M$, then using Rubin's Rules, pool the estimate $\hat{\theta}^{MI}=\frac{1}{M}\sum\limits_{m=1}^M\hat{\theta}^{(m)}$. Therefore, the predicted values of $$
+For case (i), first compute $\hat{\theta}^{(m)}$ for $m=1,2,\dots,M$, then using Rubin's Rules, pool the estimate $\hat{\theta}^{MI}=\frac{1}{M}\sum\limits_{m=1}^M\hat{\theta}^{(m)}$.
 
-For case (ii), 
+For case (ii), looking the linear regression in details:
+$$
+\hat{y}^{(mi)}_{mis}=X^i_{mis}\theta^{(mi)}+z,\quad z\sim N(0,\hat{\sigma}^2),\,m=1,2,\dots,M\,i=1,\dots,N
+$$ 
+using Rubin's Rules, we get $\hat{\theta}^{(m)}=\frac{1}{N}\sum\limits_{i=1}^N\hat{\theta}^{(mi)}$. Then we can average the pooled $\hat{\theta}^{(m)$ to get $\hat{\theta}^{MI}=\frac{1}{M}\sum\limits_{m=1}^M\hat{\theta}^{(m)}$. Since we are using stochastic linear regression method in the previous case. Therefore, $\hat{\theta}^{(m)}$ would be equvalent between the two cases.
+
+Thus, the two stratages are coincide.
 
 ## Question 4
 
