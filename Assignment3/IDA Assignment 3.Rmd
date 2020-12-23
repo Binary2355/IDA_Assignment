@@ -140,7 +140,7 @@ Assume a linear regression model with M imputations denoted as:
 $$
 \hat{y}^{(m)}_{mis}=\beta_0+X_{mis}\beta_1+z,\quad z\sim N(0,\hat{\sigma}^2),\,m=1,2,\dots,M
 $$
-
+For case (i), 
 
 ## Question 4
 
