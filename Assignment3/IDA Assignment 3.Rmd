@@ -27,6 +27,9 @@ library(dplyr)
 library(maxLik)
 library(mice)
 library(JointAI)
+library(devtools)
+library(reshape2)
+library(RColorBrewer)
 ```
 
 ## Question 1
@@ -234,7 +237,9 @@ Visualise the obeserved data in the missing dataset by pacakage JointAI to see i
 par(mar = c(3, 3, 2, 1), mgp = c(2, 0.6, 0)) 
 plot_all(NHANES2, breaks = 30, ncol = 4)
 ```
-##### Step2: Imputation
+
+##### Step1: Imputation
+
 Using the default seeting in the mice() method to see what will happen.
 ```{r}
 imp0 <- mice(NHANES2, maxit = 0) 
@@ -246,9 +251,20 @@ meth <- imp0$method
 meth[c("bili", "chol", "HDL", "hgt", "SBP", "WC")] <- "norm" 
 meth
 ```
+For these varibles("bili", "chol", "HDL", "hgt", "SBP", and "WC"), there are risks to impute negative values. 
+```{r}
+post <- imp0$post
+post["bili"] <- "imp[[j]][,i] <- squeeze(imp[[j]][,i], c(0, 20))"
+post["chol"] <- "imp[[j]][,i] <- squeeze(imp[[j]][,i], c(0, 100))"
+post["HDL"] <- "imp[[j]][,i] <- squeeze(imp[[j]][,i], c(0, 100))"
+post["hgt"] <- "imp[[j]][,i] <- squeeze(imp[[j]][,i], c(0, 3))"
+post["SBP"] <- "imp[[j]][,i] <- squeeze(imp[[j]][,i], c(0, 300))"
+post["WC"] <- "imp[[j]][,i] <- squeeze(imp[[j]][,i], c(0, 200))"
+```
+
 Then go for imputation:
 ```{r}
-imp <- mice(NHANES2,method = meth,maxit=20,m=30,seed=1,printFlag=FALSE)
+imp <- mice(NHANES2,method = meth,post=post,maxit=20,m=30,seed=1,printFlag=FALSE)
 ## check problems mice() detected
 imp$loggedEvents
 ```
@@ -262,5 +278,34 @@ from the chart above, we learnt that the iterative algorithm appears to have con
 ```{r}
 densityplot(imp)
 ```
-First note that we are using M = 30 and because the density of the observed data (the one in blue) is possibly plotted first, we can barely see it. The most outstanding plots are the ones from SBP and height (which, by consequence, also affects the BMI). Although there is nothing here that we should be too worried about, let us investigate if such differences in the two distributions (observed versus imputed), can be explained by other variables. Specifically, let us check SBP conditional on the gender and hypertensive status and height conditional on gender.
+Above, there are 30 red lines which are imputed values, and the the blue ones are from observed data. plots of "chol" and "SBP" perform best. Then check SBP conditional on the gender, and hypertensive status and height conditional on gender.
+```{r}
+densityplot(imp, ~SBP|gender)
+densityplot(imp, ~SBP|hypten)
+densityplot(imp, ~SBP|gender)
+```
+From the conditional charts, it seems that differences between the observed and imputed values for SBP affected by gender and hypertensive status, while it seems hard to be seen the relation for the variable height.
+
+
+```{r, warning=FALSE, results=FALSE, comment=FALSE, cache=FALSE}
+source_url("https://gist.githubusercontent.com/NErler/0d00375da460dd33839b98faeee2fdab/raw/c6f537ecf80eddcefd94992ec7926aa57d454536/propplot.R")
+```
+```{r, warning=FALSE}
+propplot(imp)
+```
+Observed the chart above, there is a large discrepancy between imputed and obeserved data for varible "educ"(educational status), but we do not worry about it for "educ" only has one missing value.
+
+##### Step 3: Fitting values
+
+```{r}
+fit <- with(imp, lm(wgt ~ gender + age + hgt + WC))
+summary(fit$analyses[[1]])
+```
+
+```{r}
+comp1 <- complete(imp, 1)
+plot(fit$analyses[[1]]$fitted.values, residuals(fit$analyses[[1]]),
+     xlab = "Fitted values", ylab = "Residuals")
+```
+
 
