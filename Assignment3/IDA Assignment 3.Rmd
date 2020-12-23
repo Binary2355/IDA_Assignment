@@ -66,6 +66,7 @@ ests_4[,3][,c(3,4,5,9,10)]
 ests_5[,3][,c(3,4,5,9,10)]
 ests_6[,3][,c(3,4,5,9,10)]
 ```
+From the summary of the same model using different seeds, the results remaint the same.
 
 ### $(d)$ My solution
 ```{r}
@@ -206,7 +207,7 @@ The estimates for $\beta_1$ is 0.8022453, and the 95% confident interval is $[0.
 ```{r}
 imp$predictorMatrix
 ```
-It could cause multi-colinearity.
+From the Predictor Matrix, we know that it is not modified, this will accompany with a high risk of multi-colinearity.
 
 ## Question 5
 
@@ -353,4 +354,6 @@ D1(fit, fit_no_hgt)
 # Wald test for WC
 D1(fit, fit_no_WC)
 ```
+
+And we can conclude to see that the Wald test statistic of "gender" is not significant, and therefore the gender has no relevant contribution to the SBP model. However, the Wald test statistics of the other three variables are significant, then these three need to be kept in our model. And the conclusion is same as what we conclude at the plot between response and one variable seperately.
  
