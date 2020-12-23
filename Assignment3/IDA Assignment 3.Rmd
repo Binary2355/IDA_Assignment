@@ -136,13 +136,15 @@ print(c("The emprical probability for ß1 using the corresponding bootstrap base
 ## Question 3
 
 ### My solution
+Assume the missing variables based on $X_i=(1,X_{i1},\dots,X_{in}), i=1,\dots,N$, and denote $\theta=(\beta_1,\beta_2,\dots,\beta_n)$ as the coefficients to fit. The response value is $Y=(y_1,y_2,\dots,y_N)$.
+
 Assume a linear regression model with M imputations denoted as:
 $$
-\hat{y}^{(m)}_{mis}=\beta_0+X_{mis}\beta_1+z,\quad z\sim N(0,\hat{\sigma}^2),\,m=1,2,\dots,M
+\hat{y}^{(m)}_{mis}=X_{mis}\theta+z,\quad z\sim N(0,\hat{\sigma}^2),\,m=1,2,\dots,M
 $$
-denote $\theta=(\beta_0,\beta_1)$, then:
+Then:
 
-For case (i), first compute $\hat{\theta}^{(m)}$ for $m=1,2,\dots,M$, then using Rubin's Rules, pool the estimate $\hat{\theta}^{MI}=\frac{1}{M}\sum\limits_{m=1}^M\hat{\theta}^{(m)}$.
+For case (i), first compute $\hat{\theta}^{(m)}$ for $m=1,2,\dots,M$, then using Rubin's Rules, pool the estimate $\hat{\theta}^{MI}=\frac{1}{M}\sum\limits_{m=1}^M\hat{\theta}^{(m)}$. Therefore, the predicted values of $$
 
 For case (ii), 
 
