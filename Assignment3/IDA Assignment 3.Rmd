@@ -304,8 +304,16 @@ summary(fit$analyses[[1]])
 
 ```{r}
 comp1 <- complete(imp, 1)
-plot(fit$analyses[[1]]$fitted.values, residuals(fit$analyses[[1]]),
+ind <- sample(1:30,1)
+plot(fit$analyses[[ind]]$fitted.values, residuals(fit$analyses[[1]]),
      xlab = "Fitted values", ylab = "Residuals")
 ```
+The residual plot shows a little messy, but it cannot be enough to say it is against the homoscedastic assumption.
 
+```{r}
+plot(comp1$wgt ~ comp1$age, xlab = "Age", ylab = "wgt")
+plot(comp1$wgt ~ comp1$hgt, xlab = "hgt", ylab = "wgt")
+boxplot(comp1$wgt ~ comp1$gender, xlab = "Gender", ylab = "wgt")
+plot(comp1$wgt ~ comp1$WC, xlab = "WC", ylab = "wgt")
+```
 
