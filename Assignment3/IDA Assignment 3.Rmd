@@ -196,7 +196,16 @@ imp$predictorMatrix
 It could cause multi-colinearity.
 
 ## Question 5
-
-
-
-
+To be started, using the dim() method we see that there are 500 rows, and 12 variables.
+```{r}
+load('NHANES2.Rdata')
+dim(NHANES2)
+```
+further inspect the nature of our variables and check they are correctly coded.
+```{r}
+str(NHANES2)
+```
+Check the simple statistics (min/max/mean/quantiles) of the observed data in each variable along with the number of missing values by summary() method. As we can see, "wgt", "age", and "race" are complete data.
+```{r}
+summary(NHANES2)
+```
