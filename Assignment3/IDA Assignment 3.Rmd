@@ -335,4 +335,21 @@ Also, the adjusted $R^2$ is calculated by:
 ```{r}
 pool.r.squared(pooled_ests, adjusted = TRUE)
 ```
+
+Then we do the Wald test for different variables:
+```{r}
+fit_no_gender <- with(imp, lm(wgt ~ age + hgt + WC))
+fit_no_age <- with(imp, lm(wgt ~ gender + hgt + WC))
+fit_no_hgt <- with(imp, lm(wgt ~ gender + age + WC))
+fit_no_WC <- with(imp, lm(wgt ~ gender + age + hgt))
+
+# Wald Test for gender
+D1(fit, fit_no_gender)
+# Wald Test for age
+D1(fit, fit_no_age)
+# Wald test for hgt
+D1(fit, fit_no_hgt)
+# Wald test for WC
+D1(fit, fit_no_WC)
+```
  
