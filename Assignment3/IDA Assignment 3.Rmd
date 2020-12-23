@@ -144,7 +144,7 @@ denote $\theta=(\beta_0,\beta_1)$, then:
 
 For case (i), first compute $\hat{\theta}^{(m)}$ for $m=1,2,\dots,M$, then using Rubin's Rules, pool the estimate $\hat{\theta}^{MI}=\frac{1}{M}\sum\limits_{m=1}^M\hat{\theta}^{(m)}$.
 
-For casr (ii), 
+For case (ii), 
 
 ## Question 4
 
