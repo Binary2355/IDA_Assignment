@@ -310,10 +310,29 @@ plot(fit$analyses[[ind]]$fitted.values, residuals(fit$analyses[[1]]),
 ```
 The residual plot shows a little messy, but it cannot be enough to say it is against the homoscedastic assumption.
 
+Seperately compare the response with other variables, we can find that weight do not show some tendency with the increase of age, but there are obvious positive relation with height and waist circumference, which are intuitive. And the box plot illustrates that male heavier than female on average.
 ```{r}
 plot(comp1$wgt ~ comp1$age, xlab = "Age", ylab = "wgt")
 plot(comp1$wgt ~ comp1$hgt, xlab = "hgt", ylab = "wgt")
 boxplot(comp1$wgt ~ comp1$gender, xlab = "Gender", ylab = "wgt")
 plot(comp1$wgt ~ comp1$WC, xlab = "WC", ylab = "wgt")
 ```
+With a qq plot, we do not find anything disobeys our assumption.
 
+```{r}
+qqnorm(rstandard(fit$analyses[[1]]), xlim = c(-4, 4), ylim = c(-6, 6))
+qqline(rstandard(fit$analyses[[1]]), col = 2)
+```
+
+##### Step 4: Pooling out the results
+
+```{r}
+pooled_ests <- pool(fit)
+summary(pooled_ests, conf.int = TRUE)
+```
+ 
+Also, the adjusted $R^2$ is calculated by:
+```{r}
+pool.r.squared(pooled_ests, adjusted = TRUE)
+```
+ 
