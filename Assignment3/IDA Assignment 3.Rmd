@@ -140,7 +140,11 @@ Assume a linear regression model with M imputations denoted as:
 $$
 \hat{y}^{(m)}_{mis}=\beta_0+X_{mis}\beta_1+z,\quad z\sim N(0,\hat{\sigma}^2),\,m=1,2,\dots,M
 $$
-For case (i), 
+denote $\theta=(\beta_0,\beta_1)$, then:
+
+For case (i), first compute $\hat{\theta}^{(m)}$ for $m=1,2,\dots,M$, then using Rubin's Rules, pool the estimate $\hat{\theta}^{MI}=\frac{1}{M}\sum\limits_{m=1}^M\hat{\theta}^{(m)}$.
+
+For casr (ii), 
 
 ## Question 4
 
