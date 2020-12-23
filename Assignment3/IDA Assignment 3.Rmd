@@ -26,6 +26,7 @@ library(tidyr)
 library(dplyr)
 library(maxLik)
 library(mice)
+library(JointAI)
 ```
 
 ## Question 1
@@ -222,9 +223,8 @@ Check the simple statistics (min/max/mean/quantiles) of the observed data in eac
 ```{r}
 summary(NHANES2)
 ```
-Then inspect the missing pattern of the data.
+Then inspect the missing pattern of the data.(using pacakage JointAI)
 ```{r}
-require(JointAI)
 md_pattern(NHANES2, pattern = FALSE, color = c('#34111b', '#e30f41'))
 ```
 Learnt from the chart showed above, there are 411 observations with observed values on all 12 variables. Also, 29 observations for which bilirubin concentration in mg/dL, High-density lipoprotein cholesterol in mg/dL, and otal serum cholesterol in mg/dL are missing, etc.
@@ -235,5 +235,32 @@ par(mar = c(3, 3, 2, 1), mgp = c(2, 0.6, 0))
 plot_all(NHANES2, breaks = 30, ncol = 4)
 ```
 ##### Step2: Imputation
+Using the default seeting in the mice() method to see what will happen.
+```{r}
+imp0 <- mice(NHANES2, maxit = 0) 
+imp0
+```
+From the distribution plot depicting in previous step, It is not unreasonable to change the default imputation method from pmm to norm for the variable "bili", "chol", "HDL", "hgt", "SBP", and "WC".
+```{r}
+meth <- imp0$method 
+meth[c("bili", "chol", "HDL", "hgt", "SBP", "WC")] <- "norm" 
+meth
+```
+Then go for imputation:
+```{r}
+imp <- mice(NHANES2,method = meth,maxit=20,m=30,seed=1,printFlag=FALSE)
+## check problems mice() detected
+imp$loggedEvents
+```
 
+Before fitting the model, we have to check the convergence. First we need to visulise the traceplot.
+```{r}
+plot(imp, layout = c(4,4))
+```
+from the chart above, we learnt that the iterative algorithm appears to have converged for all variables that were imputed. Then we compare the distribution of the imputed values against the distribution of the observed values. We start doing that for the continuous variables.
+
+```{r}
+densityplot(imp)
+```
+First note that we are using M = 30 and because the density of the observed data (the one in blue) is possibly plotted first, we can barely see it. The most outstanding plots are the ones from SBP and height (which, by consequence, also affects the BMI). Although there is nothing here that we should be too worried about, let us investigate if such differences in the two distributions (observed versus imputed), can be explained by other variables. Specifically, let us check SBP conditional on the gender and hypertensive status and height conditional on gender.
 
