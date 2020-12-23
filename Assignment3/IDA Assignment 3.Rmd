@@ -136,7 +136,10 @@ print(c("The emprical probability for ß1 using the corresponding bootstrap base
 ## Question 3
 
 ### My solution
+Assume a linear regression model with M imputations denoted as:
+$$
 
+$$
 
 ## Question 4
 
