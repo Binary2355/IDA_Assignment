@@ -49,7 +49,6 @@ imps <- mice(nhanes,method="norm",printFlag=FALSE,seed=1)
 fits <- with(imps,lm(bmi~age+hyp+chl))
 ests <- pool(fits)
 print(ests[,3][,c(3,4,5,9,10)])
-#summary(ests,conf.int=TRUE)[,c(2,3,6,7,8)]
 ```
 From the pooled estimates, the proportions of variance due to missing data($\frac{B+\frac{B}{M}}{V^\top}$) for intercept is 0.2233797, for the coefficient of "age" is 0.5997594, for the coefficient of "hyp" is 0.4857348, for the coefficient of "chl" is 0.4220811. Looking at the riv, *relative increase in variance*($\frac{B+\frac{B}{M}}{\bar{U}}$). "riv" of the coefficient of "age" is the largest. Therefore, the parameter for "age" appear to be most affected by the nonresponse.
 
@@ -76,13 +75,14 @@ ests_m3 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=3,m=100),lm(
 ests_m4 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=4,m=100),lm(bmi~age+hyp+chl)))
 ests_m5 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=5,m=100),lm(bmi~age+hyp+chl)))
 ests_m6 <- pool(with(mice(nhanes,method="norm",printFlag=FALSE,seed=6,m=100),lm(bmi~age+hyp+chl)))
-ests_m1[,3][,c(3,4,5,10)]
-ests_m2[,3][,c(3,4,5,10)]
-ests_m3[,3][,c(3,4,5,10)]
-ests_m4[,3][,c(3,4,5,10)]
-ests_m5[,3][,c(3,4,5,10)]
-ests_m6[,3][,c(3,4,5,10)]
+summary(ests_m1,conf.int=TRUE)
+summary(ests_m2,conf.int=TRUE)
+summary(ests_m3,conf.int=TRUE)
+summary(ests_m4,conf.int=TRUE)
+summary(ests_m5,conf.int=TRUE)
+summary(ests_m6,conf.int=TRUE)
 ```
+The (pooled) estimates, standard errors, and the bounds of the intervals get more stable as M increases and we can be more confident in any one specific run.
 
 ## Question 2
 
