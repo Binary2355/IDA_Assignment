@@ -199,6 +199,8 @@ The estimates for $\beta_2$ is 1.6168272, and the 95% confident interval is $[1.
 
 The estimates for $\beta_3$ is 0.9470357, and the 95% confident interval is $[0.7999456,1.094126]$.
 
+The estimates all become smaller and compared with the confidence intervals, we find that the length of intervals are much smaller than ones showed in previous question.
+
 ### $(c)$ My solution
 ```{r}
 imp <- mice(data4,method=meth,m=50,seed=1,printFlag = FALSE)
@@ -210,6 +212,8 @@ The estimates for $\beta_1$ is 1.2657606, and the 95% confident interval is $[1.
 The estimates for $\beta_2$ is 1.9826229, and the 95% confident interval is $[1.8858124,2.0794333]$;
 
 The estimates for $\beta_3$ is 0.8022453, and the 95% confident interval is $[0.6865434,0.9179472]$.
+
+As we can see, the estimates seems better than first one, but worse than the second one. This may caused by multi-colinearity.
 
 ### $(d)$ My solution
 ```{r}
