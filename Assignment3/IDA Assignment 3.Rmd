@@ -121,8 +121,10 @@ ECP <- function(data=dataex2,Mtd){
   return(times/n)
 }
 
-print(c("The emprical probability for ß1 using stochastic regression imputation is",ECP(Mtd="norm.nob")),quote=FALSE)
-print(c("The emprical probability for ß1 using the corresponding bootstrap based version is",ECP(Mtd="norm.boot")),quote=FALSE)
+print(c("The emprical probability for ß1 using stochastic regression imputation is",
+        ECP(Mtd="norm.nob")),quote=FALSE)
+print(c("The emprical probability for ß1 using the corresponding bootstrap based version is",
+        ECP(Mtd="norm.boot")),quote=FALSE)
 ```
 
 ## Question 3
@@ -140,7 +142,9 @@ ests <- pool(with(imps,lm(y~x1*x2)))
 summary(ests,conf.int=TRUE)[,c(1,2,7,8)]
 ```
 The estimates for $\beta_1$ is 1.4112333, and the 95% confident interval is $[1.219397,1.6030697]$;
+
 The estimates for $\beta_1$ is 1.9658191, and the 95% confident interval is $[1.860657,2.0709812]$;
+
 The estimates for $\beta_1$ is 0.7550367, and the 95% confident interval is $[0.642302,0.8677715]$.
 
 ### $(b)$ My solution
@@ -176,7 +180,9 @@ summary(ests,conf.int=TRUE)[,c(1,2,7,8)]
 imp$loggedEvents
 ```
 The estimates for $\beta_1$ is 0.9761881, and the 95% confident interval is $[0.6992222,1.253154]$;
+
 The estimates for $\beta_1$ is 1.6168272, and the 95% confident interval is $[1.4688180,1.764836]$;
+
 The estimates for $\beta_1$ is 0.9470357, and the 95% confident interval is $[0.7999456,1.094126]$.
 
 ### $(c)$ My solution
@@ -186,7 +192,9 @@ ests <- pool(with(imp,lm(y~x1+x2+inter)))
 summary(ests,conf.int=TRUE)[,c(1,2,7,8)]
 ```
 The estimates for $\beta_1$ is 1.2657606, and the 95% confident interval is $[1.0714517,1.4600696]$;
+
 The estimates for $\beta_1$ is 1.9826229, and the 95% confident interval is $[1.8858124,2.0794333]$;
+
 The estimates for $\beta_1$ is 0.8022453, and the 95% confident interval is $[0.6865434,0.9179472]$.
 
 ### $(d)$ My solution
@@ -196,6 +204,11 @@ imp$predictorMatrix
 It could cause multi-colinearity.
 
 ## Question 5
+
+### My solution 
+
+##### Step1: Inspect
+
 To be started, using the dim() method we see that there are 500 rows, and 12 variables.
 ```{r}
 load('NHANES2.Rdata')
@@ -209,3 +222,18 @@ Check the simple statistics (min/max/mean/quantiles) of the observed data in eac
 ```{r}
 summary(NHANES2)
 ```
+Then inspect the missing pattern of the data.
+```{r}
+require(JointAI)
+md_pattern(NHANES2, pattern = FALSE, color = c('#34111b', '#e30f41'))
+```
+Learnt from the chart showed above, there are 411 observations with observed values on all 12 variables. Also, 29 observations for which bilirubin concentration in mg/dL, High-density lipoprotein cholesterol in mg/dL, and otal serum cholesterol in mg/dL are missing, etc.
+
+Visualise the obeserved data in the missing dataset by pacakage JointAI to see if there is normality between varaibles.
+```{r}
+par(mar = c(3, 3, 2, 1), mgp = c(2, 0.6, 0)) 
+plot_all(NHANES2, breaks = 30, ncol = 4)
+```
+##### Step2: Imputation
+
+
