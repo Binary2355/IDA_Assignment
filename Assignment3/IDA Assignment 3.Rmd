@@ -30,6 +30,7 @@ library(JointAI)
 library(devtools)
 library(reshape2)
 library(RColorBrewer)
+library(mitml)
 ```
 
 ## Question 1
@@ -279,7 +280,7 @@ from the chart above, we learnt that the iterative algorithm appears to have con
 densityplot(imp)
 ```
 Above, there are 30 red lines which are imputed values, and the the blue ones are from observed data. plots of "chol" and "SBP" perform best. Then check SBP conditional on the gender, and hypertensive status and height conditional on gender.
-```{r}
+```{r, fig.width=6,fig.height=3}
 densityplot(imp, ~SBP|gender)
 densityplot(imp, ~SBP|hypten)
 densityplot(imp, ~SBP|gender)
