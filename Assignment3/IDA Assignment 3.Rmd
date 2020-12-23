@@ -135,8 +135,8 @@ print(c("The emprical probability for ß1 using the corresponding bootstrap base
 ### $(a)$ My solution
 ```{r}
 load("dataex4.Rdata")
-dataex4
-ests <- pool(with(mice(dataex4,printFlag=FALSE,seed=1,m=50),lm(y~x1*x2)))
+imps <- mice(dataex4,printFlag=FALSE,seed=1,m=50)
+ests <- pool(with(imps,lm(y~x1*x2)))
 summary(ests,conf.int=TRUE)[,c(1,2,7,8)]
 ```
 The estimates for $\beta_1$ is 1.4112333, and the 95% confident interval is $[1.219397,1.6030697]$;
@@ -144,13 +144,56 @@ The estimates for $\beta_1$ is 1.9658191, and the 95% confident interval is $[1.
 The estimates for $\beta_1$ is 0.7550367, and the 95% confident interval is $[0.642302,0.8677715]$.
 
 ### $(b)$ My solution
+```{r}
+data4 =
+  dataex4 %>%
+  mutate(inter = x1*x2)
 
+#data4
+imps <- mice(data4,printFlag=FALSE,seed=1,m=50)
+# change the method using I() method
+meth <- imps$method 
+meth["inter"] <- "~I(x1*x2)"
+
+# prevent feedback from interaction in the imputation of x1 and x2
+pred <- imps$predictorMatrix
+# x1*x2 will not be used as predictor of x1 and x2
+pred[c("x1", "x2"), "inter"] <- 0
+pred[,c("x1","x2")] <- 0
+pred["x1","x2"] <- 1
+pred["x2","x1"] <- 1
+
+# make sure x1*x2 ordered at last
+visSeq <- imps$visitSequence 
+which_inter <- match("inter", visSeq)
+visSeq <- c(visSeq[-which_inter], visSeq[which_inter])
+
+# passive imputation to impute the interaction variable
+imp <- mice(data4,method=meth,predictorMatrix=pred,visitSequence=visSeq,m=50,seed=1,printFlag = FALSE)
+ests <- pool(with(imp,lm(y~x1*x2)))
+summary(ests,conf.int=TRUE)[,c(1,2,7,8)]
+## check problems mice() detected
+imp$loggedEvents
+```
+The estimates for $\beta_1$ is 0.9761881, and the 95% confident interval is $[0.6992222,1.253154]$;
+The estimates for $\beta_1$ is 1.6168272, and the 95% confident interval is $[1.4688180,1.764836]$;
+The estimates for $\beta_1$ is 0.9470357, and the 95% confident interval is $[0.7999456,1.094126]$.
 
 ### $(c)$ My solution
-
+```{r}
+imp <- mice(data4,method=meth,m=50,seed=1,printFlag = FALSE)
+ests <- pool(with(imp,lm(y~x1+x2+inter)))
+summary(ests,conf.int=TRUE)[,c(1,2,7,8)]
+```
+The estimates for $\beta_1$ is 1.2657606, and the 95% confident interval is $[1.0714517,1.4600696]$;
+The estimates for $\beta_1$ is 1.9826229, and the 95% confident interval is $[1.8858124,2.0794333]$;
+The estimates for $\beta_1$ is 0.8022453, and the 95% confident interval is $[0.6865434,0.9179472]$.
 
 ### $(d)$ My solution
-
+```{r}
+imp$predictorMatrix
+```
+It could cause multi-colinearity.
 
 ## Question 5
 
